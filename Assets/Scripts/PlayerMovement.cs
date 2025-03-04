@@ -20,13 +20,24 @@ public class PlayerMovement : MonoBehaviour
 
     private RaycastHit hitLogs;
 
+    public GameObject logPrefab;
+    public float minX = -10f;
+    public float maxX = 10f;
+    public float minZ = -10f;
+    public float maxZ = 10f;
+
+    public float prefSpeed = 5f;
+    public float destroyXLimit = 15f;
+    
+
     void Start()
     {
-
+        
     }
 
     void Update()
     {
+        
         #if UNITY_EDITOR
             if (Input.GetMouseButtonDown(0))
             {
@@ -58,7 +69,24 @@ public class PlayerMovement : MonoBehaviour
         }
         if(isGrounded && isJumping)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            transform.position = hitLogs.point;
+
+            //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+
+            /*
+            Vector3 pos = hitLogs.point;
+            rb.linearVelocity = new Vector3(pos.x*moveSpeed,jumpForce,pos.z*moveSpeed);
+            */
+            
+            /*
+            if(isJumping == true)
+            {
+                
+                Vector3 pos = hitLogs.point;
+                rb.linearVelocity = new Vector3(pos.x*moveSpeed,pos.y,pos.z*moveSpeed);
+                Debug.Log("New");
+            }
+            */
             isJumping = false;
         }
     }
@@ -71,5 +99,15 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+
+    /*
+    void OnCollisionEnter(Collider other)
+    {
+        if(other.CompareTag("Log"))
+        {
+            moveSpeed = 0.0f;
+        }
+    }
+    */
 }
 
