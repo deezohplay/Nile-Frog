@@ -1,86 +1,75 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using System.Linq;
-using System;
-using TMPro;
+
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
-{
-    public float jumpHeight = 2f; // Adjust jump arc
-    public float jumpSpeed = 5f; // Speed of jump
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
+{ 
     public Rigidbody rb;
-    public float rotationSpeed = 10f;
+    [SerializeField] float moveSpeed = 7f;
+    [SerializeField] float jumpForce = 15f;
+    [SerializeField] float groundCheckRadius = 0.2f;
 
-    private Vector3 targetPosition;
-    private bool isJumping = false;
-    private bool isGrounded = false;
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+
+    bool jump;
+    bool isJumping;
+    bool isGrounded;
+
+    private RaycastHit hitLogs;
 
     void Start()
     {
-        if (rb == null)
-            rb = GetComponent<Rigidbody>();
+
     }
 
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
-
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && !isJumping && isGrounded)
-        {
-            DetectAndJump();
-        }
-    }
-
-    void DetectAndJump()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            StartCoroutine(JumpToPosition(hit.collider.gameObject));
-        }
-    }
-
-    IEnumerator JumpToPosition(GameObject targetObject)
-    {
-        isJumping = true;
-        Vector3 startPosition = transform.position;
-        targetPosition = targetObject.transform.position; // Updates in case object is moving
-        float elapsedTime = 0f;
-        Vector3 midPoint = (startPosition + targetPosition) / 2 + Vector3.up * jumpHeight;
-
-        while (elapsedTime < 1f)
-        {
-            elapsedTime += Time.deltaTime * jumpSpeed;
-            Vector3 nextPosition = ParabolicLerp(startPosition, midPoint, targetPosition, elapsedTime);
-            rb.MovePosition(nextPosition);
-            
-            // Rotate towards the target position
-            Vector3 direction = (targetPosition - transform.position).normalized;
-            if (direction != Vector3.zero)
+        #if UNITY_EDITOR
+            if (Input.GetMouseButtonDown(0))
             {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.deltaTime * rotationSpeed));
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hitLogs))
+                {
+                    if(hitLogs.collider)
+                    {
+                        Debug.Log("Successfull");
+                        jump = true;
+                        if(jump && !isJumping)
+                        {
+                            jump = false;
+                            isJumping = true;
+                        }
+                    }
+                }
             }
-            
-            yield return null;
-        }
-
-        rb.MovePosition(targetPosition);
-        isJumping = false;
+        #endif
     }
-
-    Vector3 ParabolicLerp(Vector3 start, Vector3 mid, Vector3 end, float t)
+    void FixedUpdate()
     {
-        Vector3 a = Vector3.Lerp(start, mid, t);
-        Vector3 b = Vector3.Lerp(mid, end, t);
-        return Vector3.Lerp(a, b, t);
+        isGrounded = Physics.CheckSphere(groundCheck.position,groundCheckRadius,groundLayer);
+
+        if(!isGrounded && isJumping)
+        {
+            isJumping = false;
+            return;
+        }
+        if(isGrounded && isJumping)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            isJumping = false;
+        }
+    }
+     void OnDrawGizmos()
+    {
+         // Draw ground check radius in editor for visualization
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
     }
 }
 
