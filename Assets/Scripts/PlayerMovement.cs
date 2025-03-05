@@ -70,23 +70,7 @@ public class PlayerMovement : MonoBehaviour
         if(isGrounded && isJumping)
         {
             transform.position = hitLogs.point;
-
             //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-
-            /*
-            Vector3 pos = hitLogs.point;
-            rb.linearVelocity = new Vector3(pos.x*moveSpeed,jumpForce,pos.z*moveSpeed);
-            */
-            
-            /*
-            if(isJumping == true)
-            {
-                
-                Vector3 pos = hitLogs.point;
-                rb.linearVelocity = new Vector3(pos.x*moveSpeed,pos.y,pos.z*moveSpeed);
-                Debug.Log("New");
-            }
-            */
             isJumping = false;
         }
     }
@@ -99,15 +83,5 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
-
-    /*
-    void OnCollisionEnter(Collider other)
-    {
-        if(other.CompareTag("Log"))
-        {
-            moveSpeed = 0.0f;
-        }
-    }
-    */
 }
 
