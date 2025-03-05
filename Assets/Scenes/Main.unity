@@ -438,15 +438,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabToSpawn:
   - {fileID: 2760626737809192047, guid: a2ba8eeb47abe7e4cb213c77430b5d14, type: 3}
-  minX: -10
-  maxX: 10
+  posX: 30
   minZ: -10
   maxZ: 10
   minSpawnInterval: 1
   maxSpawnInterval: 5
-  minVelocityX: 2
-  maxVelocityX: 5
-  nextSpawnTime: 0
 --- !u!1 &604712593
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,13 +760,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.078024045, y: 0, z: 0, w: 0.99695146}
-  m_LocalPosition: {x: 0, y: 3, z: -11.51}
+  m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: 3, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 8.95, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!1 &1059125385
 GameObject:
   m_ObjectHideFlags: 0
