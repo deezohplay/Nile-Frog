@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2771696354954764740}
   m_Layer: 6
   m_Name: log
-  m_TagString: Untagged
+  m_TagString: Floating
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,5 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acf14b0116aea94abc440ae8d296f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minVelocityX: 2
-  maxVelocityX: 5
+  minVelocityX: 1
+  maxVelocityX: 3

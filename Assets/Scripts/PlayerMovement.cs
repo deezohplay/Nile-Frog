@@ -19,16 +19,8 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
 
     private RaycastHit hitLogs;
-
-    public GameObject logPrefab;
-    public float minX = -10f;
-    public float maxX = 10f;
-    public float minZ = -10f;
-    public float maxZ = 10f;
-
-    public float prefSpeed = 5f;
-    public float destroyXLimit = 15f;
-    
+    private Vector3 currentPlatform;
+    private Transform platformLastPosition;
 
     void Start()
     {
@@ -41,40 +33,25 @@ public class PlayerMovement : MonoBehaviour
         #if UNITY_EDITOR
             if (Input.GetMouseButtonDown(0))
             {
+                isGrounded = Physics.CheckSphere(groundCheck.position,groundCheckRadius,groundLayer);
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hitLogs))
                 {
-                    if(hitLogs.collider)
+                    if(hitLogs.collider.CompareTag("Floating"))
                     {
                         Debug.Log("Successfull");
-                        jump = true;
-                        if(jump && !isJumping)
-                        {
-                            jump = false;
-                            isJumping = true;
-                        }
+                        currentPlatform = hitLogs.point;
+                        transform.position = currentPlatform;
+                        transform.parent = hitLogs.collider.transform;
+                        Debug.Log(currentPlatform);
                     }
                 }
             }
         #endif
     }
-    void FixedUpdate()
-    {
-        isGrounded = Physics.CheckSphere(groundCheck.position,groundCheckRadius,groundLayer);
 
-        if(!isGrounded && isJumping)
-        {
-            isJumping = false;
-            return;
-        }
-        if(isGrounded && isJumping)
-        {
-            transform.position = hitLogs.point;
-            //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-            isJumping = false;
-        }
-    }
-     void OnDrawGizmos()
+    void OnDrawGizmos()
     {
          // Draw ground check radius in editor for visualization
         if (groundCheck != null)

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FloatFlowing : MonoBehaviour
 {
-    public float minVelocityX = 0.1f, maxVelocityX = 1.0f; // Velocity range along X
+    public float minVelocityX = 0.01f, maxVelocityX = 0.1f; // Velocity range along X
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
