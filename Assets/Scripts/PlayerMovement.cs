@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         Debug.Log("Successfull");
                         currentPlatform = hitLogs.point;
-                        transform.position = currentPlatform;
+                        transform.Translate(currentPlatform,moveSpeed*Time.deltaTime);
                         transform.parent = hitLogs.collider.transform;
                         Debug.Log(currentPlatform);
                     }
