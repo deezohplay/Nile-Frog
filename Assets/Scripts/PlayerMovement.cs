@@ -19,8 +19,9 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
 
     private RaycastHit hitLogs;
-    private Vector3 currentPlatform;
-    private Transform platformLastPosition;
+    private Vector3 floatingObjectPosition;
+    private Vector3 playerPosition;
+    public float duration = 1.0f;
 
     void Start()
     {
@@ -29,22 +30,23 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        
+        playerPosition = rb.position;
+
         #if UNITY_EDITOR
             if (Input.GetMouseButtonDown(0))
             {
-                isGrounded = Physics.CheckSphere(groundCheck.position,groundCheckRadius,groundLayer);
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+                //isGrounded = Physics.CheckSphere(groundCheck.position,groundCheckRadius,groundLayer);
+                //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+                
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hitLogs))
                 {
                     if(hitLogs.collider.CompareTag("Floating"))
                     {
-                        Debug.Log("Successfull");
-                        currentPlatform = hitLogs.point;
-                        transform.Translate(currentPlatform,moveSpeed*Time.deltaTime);
+                        floatingObjectPosition = hitLogs.point;
+                        StartCoroutine(LerpValue(playerPosition,floatingObjectPosition));
+                        transform.position = floatingObjectPosition;
                         transform.parent = hitLogs.collider.transform;
-                        Debug.Log(currentPlatform);
                     }
                 }
             }
@@ -58,6 +60,17 @@ public class PlayerMovement : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
+    IEnumerator LerpValue(Vector3 start, Vector3 end)
+    {
+        float timeElapsed = 0;
+        while(timeElapsed < duration)
+        {
+            float t = timeElapsed / duration;
+            transform.position = Vector3.Lerp(start, end, t);
+            timeElapsed += Time.deltaTime;
+            yield return null;
         }
     }
 }
